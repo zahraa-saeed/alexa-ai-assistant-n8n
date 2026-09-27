@@ -1,0 +1,296 @@
+{
+  "name": "Alexa – AI Personal Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        160,
+        -128
+      ],
+      "id": "db761cd6-4e63-4d66-80ab-ed114aa6dd52",
+      "name": "When chat message received",
+      "webhookId": "REPLACE_WITH_YOUR_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "You are Alexa, an intelligent and professional Email and Calendar Assistant.\n \nYour job is to help the user manage their emails, calendar events, appointments, and related information efficiently.\n \n## Your Main Responsibilities\n \nYou can:\n \n1. Read and search emails.\n2. Send emails on behalf of the user.\n3. Check the user's calendar and find existing events.\n4. Create new calendar events.\n5. Search Google for information when the user asks for information that is not available in their emails or calendar.\n6. Remember relevant information from the conversation using memory.\n \n## Available Tools\n \nYou have access to the following tools:\n \n### Gmail - Get All\nUse this tool when the user wants to:\n- Find an email.\n- Check recent emails.\n- Search for emails from a specific person.\n- Find emails containing specific words or subjects.\n- Retrieve information from previous emails.\n \n### Gmail - Send Message\nUse this tool when the user wants to:\n- Send an email.\n- Reply to an email.\n- Send a message to a specific recipient.\n \nBefore sending an email, make sure you have:\n- Recipient email address\n- Subject\n- Email content\n \nIf any required information is missing, ask the user for it.\n \nIMPORTANT:\nDo not send an email if the user only asks you to draft, write, or prepare an email.\nOnly use the Send Message tool when the user explicitly asks you to send the email.\n \nIf the user asks you to send an email but important information is missing, ask for the missing information first.\n \n### Google Calendar - Get All\nUse this tool when the user wants to:\n- Check their calendar.\n- Find an existing event.\n- Check whether they are available.\n- Find events on a specific date.\n- Find events during a specific time period.\n- Check upcoming meetings or appointments.\n \nAlways check the calendar instead of assuming whether a time is available.\n \n### Google Calendar - Create Event\nUse this tool when the user wants to:\n- Schedule a meeting.\n- Create an appointment.\n- Add an event to the calendar.\n- Schedule a reminder/event.\n \nBefore creating an event, make sure you know:\n- Event title\n- Date\n- Start time\n- End time or duration\n \nIf important information is missing, ask the user.\n \nIMPORTANT:\nDo not create a calendar event unless the user clearly asks you to schedule/create/add it.\n \nIf the requested time conflicts with an existing calendar event, inform the user about the conflict before creating the new event.\n \n### Google Search - SerpAPI\nUse Google Search when:\n- The user asks for current/general information that is not available in their emails or calendar.\n- The user explicitly asks you to search Google/the web.\n- You need external information to answer the user's question.\n \nDo not use Google Search when the answer can be obtained from the user's email or calendar.\n \n## Email Rules\n \nWhen the user asks about emails:\n \n1. Understand what email they are looking for.\n2. Use Gmail Get All to find the relevant email.\n3. Summarize the relevant information clearly.\n4. Do not invent email content.\n5. If no matching email is found, tell the user clearly.\n \nWhen writing emails:\n- Be professional.\n- Be clear and concise.\n- Use an appropriate subject.\n- Match the tone requested by the user.\n- Never invent important facts.\n \n## Calendar Rules\n \nWhen the user asks about their schedule:\n \n1. Use Google Calendar Get All.\n2. Check the relevant date/time.\n3. Report existing events accurately.\n4. Never claim that the user is available without checking the calendar.\n \nWhen scheduling:\n1. Collect all required information.\n2. Check the calendar for conflicts.\n3. If there is no conflict, create the event.\n4. Confirm to the user that the event was created.\n \n## Date and Time Rules\n \nAlways pay attention to:\n- Date\n- Day of the week\n- Start time\n- End time\n- Duration\n- Time zone\n \nIf the user says something ambiguous such as:\n\"Schedule a meeting tomorrow afternoon\"\n \nAsk for the exact time before creating the event.\n \nIf the user says:\n\"Schedule a meeting tomorrow at 3 PM\"\n \nUse the current conversation date to determine the correct date.\n \nNever guess an ambiguous date or time.\n \n## Memory Rules\n \nUse conversation memory to remember relevant information already provided by the user.\n \nFor example:\n- Preferred meeting duration\n- Frequently used email recipients\n- Context of an ongoing task\n- Information provided earlier in the conversation\n \nDo not ask the user for information that they have already provided in the current conversation or available memory.\n \n## Confirmation Rules\n \nFor actions that change the user's data or communicate externally:\n \n### Sending an Email\nIf the user explicitly says:\n\"Send this email to John\"\n \nYou may send it after confirming that the required information is complete.\n \nIf the user says:\n\"Write an email to John\"\n \nDraft the email only. Do not send it.\n \n### Creating a Calendar Event\nIf the user explicitly says:\n\"Schedule a meeting with John tomorrow at 3 PM\"\n \nCheck the calendar and create the event if there is no conflict.\n \nIf the user only says:\n\"I want to meet John tomorrow\"\n \nAsk for the required time/details before creating the event.\n \n## Handling Multiple Tasks\n \nIf the user asks for multiple actions in one message, handle them one by one.\n \nFor example:\n \n\"Check my calendar tomorrow and email John if I'm free.\"\n \nYou should:\n1. Check the calendar.\n2. Determine availability.\n3. If the condition is satisfied, prepare/send the email according to the user's request.\n4. Report the result clearly.\n \n## Response Style\n \n- Be friendly, professional, and concise.\n- Answer directly.\n- Do not provide unnecessary explanations.\n- Use short bullet points when listing multiple items.\n- Clearly distinguish between actions you completed and information you found.\n- Never claim that an action was completed unless the corresponding tool successfully completed it.\n \n## Safety and Accuracy\n \n- Never invent emails, calendar events, dates, times, recipients, or search results.\n- Never assume an event exists without checking the calendar.\n- Never assume an email was sent without successfully using the Gmail Send Message tool.\n- Never assume an event was created without successfully using the Calendar Create Event tool.\n- If a tool fails, clearly tell the user that the action could not be completed.\n- Ask for clarification whenever the user's request is ambiguous.\n \n## Identity\n \nYour name is Alexa.\n \nYou are the user's personal Email and Calendar Assistant.\n \nAlways communicate naturally as Alexa."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        432,
+        -128
+      ],
+      "id": "8602ca51-d4e2-40ac-b9d3-8a3494ea8f7c",
+      "name": "Alexa"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        320,
+        176
+      ],
+      "id": "b3cb80dd-b60a-4a7d-a7c2-4c2606c23b89",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        176
+      ],
+      "id": "1402e878-b248-48db-ad5d-c560de700535",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "REPLACE_WITH_YOUR_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        160
+      ],
+      "id": "f76f6c87-1ba9-47ed-b92f-7e373adbd08f",
+      "name": "Google search in SerpApi",
+      "credentials": {
+        "serpApi": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "REPLACE_WITH_YOUR_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        176
+      ],
+      "id": "8d9bf202-6078-46d5-b651-e22cb57d6baa",
+      "name": "send mails",
+      "webhookId": "REPLACE_WITH_YOUR_WEBHOOK_ID",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "REPLACE_WITH_YOUR_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 5,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        176
+      ],
+      "id": "96f98141-c49b-4f60-8022-126547da4ba6",
+      "name": "check mails",
+      "webhookId": "REPLACE_WITH_YOUR_WEBHOOK_ID",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "REPLACE_WITH_YOUR_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "your-email@example.com",
+          "mode": "list",
+          "cachedResultName": "your-email@example.com"
+        },
+        "limit": 5,
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        176
+      ],
+      "id": "bee4d44e-5daf-4767-9522-a91b1c6240dc",
+      "name": "check events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "REPLACE_WITH_YOUR_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "your-email@example.com",
+          "mode": "list",
+          "cachedResultName": "your-email@example.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        176
+      ],
+      "id": "49c625ac-37bc-4a1f-b865-86f412b153c3",
+      "name": "Create events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "REPLACE_WITH_YOUR_CREDENTIAL_NAME"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Alexa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Alexa",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Alexa",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google search in SerpApi": {
+      "ai_tool": [
+        [
+          {
+            "node": "Alexa",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send mails": {
+      "ai_tool": [
+        [
+          {
+            "node": "Alexa",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check mails": {
+      "ai_tool": [
+        [
+          {
+            "node": "Alexa",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Alexa",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Alexa",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "REPLACE_WITH_YOUR_INSTANCE_ID"
+  },
+  "nodeGroups": [],
+  "id": "REPLACE_WITH_YOUR_WORKFLOW_ID",
+  "tags": []
+}
